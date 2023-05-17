@@ -1,0 +1,305 @@
+Solution 1 : To make the code run, you need to do the following:
+
+Create a file named "test.xml" in the same package (com.ncodeit) as the TestMain class.
+test.xml:
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="createBean" class="com.ncodeit.A">
+        <property name="obj" ref="bBean" />
+    </bean>
+
+    <bean id="bBean" class="com.ncodeit.B" />
+</beans>
+
+
+Add the missing import statements for the required Spring Framework classes in the TestMain class.
+package com.ncodeit;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestMain {
+
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("test.xml");
+        A objA = (A) context.getBean("createBean");
+        objA.printMessage();
+
+        context.close();
+    }
+}
+
+
+
+With these changes, the code should now run successfully. It creates a Spring application context, retrieves an instance of class A from the context, and then calls the printMessage method, which in turn calls the getMessage method of class B to print "Hello World from Spring" to the console. Finally, it closes the application context.
+
+
+Solution 2:To make the code run, you need to make the following changes:
+
+Remove the import statement for com.encodeit.CoreBean in the TestMain class since it is not required.
+
+Create a new class named MyConfiguration in the com.ncodeit package, which will serve as the configuration class for the Spring application.
+
+package com.ncodeit;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MyConfiguration {
+	
+	@Bean
+	public A createBean() {
+		A objA = new A();
+		objA.setObj(createBBean());
+		return objA;
+	}
+	
+	@Bean
+	public B createBBean() {
+		return new B();
+	}
+}
+
+
+Update the import statement in the TestMain class to import org.springframework.context.annotation.AnnotationConfigApplicationContext instead of org.springframework.context.support.ClassPathXmlApplicationContext.
+
+package com.ncodeit;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class TestMain {
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(MyConfiguration.class);
+        context.refresh();
+
+        A objA = context.getBean(A.class);
+        objA.printMessage();
+
+        context.close();
+    }
+}
+
+
+With these changes, the code should now run successfully. It creates an instance of AnnotationConfigApplicationContext, registers the MyConfiguration class as the configuration for the Spring application context, refreshes the context, retrieves an instance of class A from the context, and then calls the printMessage method, which in turn calls the getMessage method of class B to print "Hello World from Spring" to the console. Finally, it closes the application context.
+
+
+Solution 3:To make the code run, you need to make the following changes:
+
+Create a file named "test-example.xml" in the same package (com.ncodeit.springExample) as the App class.
+test-example.xml:
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="student" class="com.ncodeit.springExample.Student">
+        <property name="name" value="John Doe" />
+        <property name="address" ref="address" />
+    </bean>
+
+    <bean id="address" class="com.ncodeit.springExample.Address">
+        <property name="city" value="New York" />
+    </bean>
+</beans>
+Update the package name in the App class to match the package declaration of the other classes.
+
+package com.ncodeit.springExample;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("test-example.xml");
+        Student st = (Student) context.getBean("student");
+        String stName = st.getName();
+        System.out.println("student Name: " + stName);
+        System.out.println("Student City: " + st.getAddress().getCity());
+        context.close();
+    }
+}
+With these changes, the code should now run successfully. It creates a Spring application context, retrieves an instance of the Student class from the context, and then prints the student's name and city to the console. Finally, it closes the application context.
+
+
+
+
+Solution4:
+
+To create an Employee class as a Spring bean using XML configuration, and then set the properties and print the values in the main Java class, you can follow these steps:
+
+Create a new Java class named Employee in the package com.ncodeit.springExample with the required fields, getters, and setters.
+package com.ncodeit.springExample;
+
+public class Employee {
+    private int empId;
+    private String empName;
+    private int age;
+    private double salary;
+
+    public int getEmpId() {
+        return empId;
+    }
+
+    public void setEmpId(int empId) {
+        this.empId = empId;
+    }
+
+    public String getEmpName() {
+        return empName;
+    }
+
+    public void setEmpName(String empName) {
+        this.empName = empName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+}
+Create a new XML configuration file named employee-config.xml in the same package (com.ncodeit.springExample).
+employee-config.xml:|
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="employee" class="com.ncodeit.springExample.Employee">
+        <property name="empId" value="101" />
+        <property name="empName" value="John Doe" />
+        <property name="age" value="30" />
+        <property name="salary" value="5000.0" />
+    </bean>
+
+</beans>
+Create a new Java class named App in the same package (com.ncodeit.springExample) to load the XML configuration, retrieve the Employee bean, and print its properties.
+
+package com.ncodeit.springExample;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("employee-config.xml");
+
+        Employee employee = (Employee) context.getBean("employee");
+        System.out.println("Employee ID: " + employee.getEmpId());
+        System.out.println("Employee Name: " + employee.getEmpName());
+        System.out.println("Age: " + employee.getAge());
+        System.out.println("Salary: " + employee.getSalary());
+
+        context.close();
+    }
+}
+Employee ID: 101
+Employee Name: John Doe
+Age: 30
+Salary: 5000.0
+
+By following these steps, you have created an Employee class as a Spring bean using XML configuration, set its properties in the XML file, and printed the values in the main Java class.
+
+Solution 5:
+Create a Student class with fields studentId, studentName,age and make it spring bean using Annotations,set the properties and print the values in java main class
+
+
+To create a Student class as a Spring bean using annotations, set the properties, and print the values in the main Java class, you can follow these steps:
+
+Create a new Java class named Student in the package com.ncodeit.springExample with the required fields, getters, and setters. Annotate the class with @Component to make it a Spring bean.
+java
+package com.ncodeit.springExample;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Student {
+    private int studentId;
+    private String studentName;
+    private int age;
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+Create a new Java class named App in the same package (com.ncodeit.springExample) to configure the Spring context using annotations, retrieve the Student bean, and print its properties.
+java
+package com.ncodeit.springExample;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class App {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        Student student = context.getBean(Student.class);
+        student.setStudentId(101);
+        student.setStudentName("John Doe");
+        student.setAge(20);
+
+        System.out.println("Student ID: " + student.getStudentId());
+        System.out.println("Student Name: " + student.getStudentName());
+        System.out.println("Age: " + student.getAge());
+
+        context.close();
+    }
+}
+Create a new Java class named AppConfig in the same package (com.ncodeit.springExample) and annotate it with @Configuration. Define a bean of type Student using the @Bean annotation and set its properties.
+java
+Copy code
+package com.ncodeit.springExample;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig {
+    @Bean
+    public Student student() {
+        return new Student();
+    }
+}
+Run the App class, and it will print the values of the Student object that you have set in the main method.
+The output should be:
+
+yaml
+Copy code
+Student ID: 101
+Student Name: John Doe
+Age: 20
+By following these steps, you have created a Student class as a Spring bean using annotations, set its properties in the main method, and printed the values in the main Java class.
+
+
